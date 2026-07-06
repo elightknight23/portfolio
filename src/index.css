@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/*
+ * Palette lives as raw, swappable custom properties so a single [data-theme]
+ * override on <html> retints the whole site. `cream`/`ink` are used
+ * SEMANTICALLY — cream = page background, ink = primary text — so they flip
+ * polarity between themes. `panel`/`panel-fg` intentionally do NOT flip: they
+ * stay a dark surface with light text in both themes (Contact, Preloader,
+ * card-hover), lifting to an elevated tone in dark mode.
+ */
+:root {
+  --cream: #fcf9f8;
+  --ink: #1c1b1b;
+  --rust: #9b4429;
+  --smoke: #444748;
+  --ash: #858383;
+  --line: #c4c7c7;
+  --steel: #747878;
+  --surface: #f4efec;
+  --panel: #1c1b1b;
+  --panel-fg: #fcf9f8;
+}
+
+:root[data-theme="dark"] {
+  --cream: #12100f;
+  --ink: #ece7e3;
+  --rust: #c76b46;
+  --smoke: #a8a5a1;
+  --ash: #8f8b87;
+  --line: #35312d;
+  --steel: #6f6c69;
+  --surface: #17140f;
+  --panel: #1f1c1a;
+  --panel-fg: #ece7e3;
+}
+
+/* `inline` so utilities compile to var(--raw) — resolved on the consuming
+   element, which is what makes the [data-theme] override apply at runtime. */
+@theme inline {
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+  --color-rust: var(--rust);
+  --color-smoke: var(--smoke);
+  --color-ash: var(--ash);
+  --color-line: var(--line);
+  --color-steel: var(--steel);
+  --color-surface: var(--surface);
+  --color-panel: var(--panel);
+  --color-panel-fg: var(--panel-fg);
+}
+
+@theme {
+  --font-display: "Anton", "Arial Narrow", sans-serif;
+  --font-grotesk: "Space Grotesk Variable", "Space Grotesk", sans-serif;
+  --font-body: "Libre Franklin Variable", "Libre Franklin", sans-serif;
+}
+
+html {
+  background-color: var(--cream);
+  scrollbar-width: thin;
+  scrollbar-color: var(--steel) transparent;
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-cream font-body text-ink antialiased;
+  overflow-x: clip;
+  /* smooth the retint when the theme toggles */
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+::selection {
+  background: var(--rust);
+  color: var(--cream);
+}
+
+:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 3px;
+}
+
+/* Native cursor is hidden only while the custom cursor is mounted (fine pointers only). */
+@media (pointer: fine) {
+  .has-cursor,
+  .has-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* Underline that draws in from the left on hover. */
+.u-line {
+  position: relative;
+}
+.u-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.u-line:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
