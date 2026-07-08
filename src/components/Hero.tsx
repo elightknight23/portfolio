@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
+  animate,
   motion,
   useReducedMotion,
   useScroll,
@@ -8,7 +9,8 @@ import {
   type Variants,
 } from 'motion/react'
 import { EXPO } from '../lib/anim'
-import { HERO } from '../content'
+import { useLeetCodeSolved } from '../lib/leetcode'
+import { HERO, HERO_META, LINKS } from '../content'
 
 const maskUp = (delay: number): Variants => ({
   hidden: { y: '115%' },
@@ -81,6 +83,47 @@ function Letter({
   )
 }
 
+/** Live LeetCode solved count — fades in as a fourth stat once fetched. */
+function LeetCodeStat() {
+  const solved = useLeetCodeSolved('elightknight23')
+  const reduce = useReducedMotion()
+  const [display, setDisplay] = useState(0)
+
+  useEffect(() => {
+    if (solved === null) return
+    if (reduce) {
+      setDisplay(solved)
+      return
+    }
+    const controls = animate(0, solved, {
+      duration: 1.4,
+      ease: EXPO,
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    })
+    return () => controls.stop()
+  }, [solved, reduce])
+
+  if (solved === null) return null
+
+  return (
+    <motion.a
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: EXPO }}
+      href={LINKS.leetcode}
+      target="_blank"
+      rel="noreferrer"
+      data-cursor="link"
+      className="lg:text-right"
+    >
+      <p className="font-display text-4xl leading-none text-ink lg:text-5xl">{display}</p>
+      <p className="mt-2 font-grotesk text-[11px] uppercase tracking-[0.2em] text-ash">
+        LeetCode Solved
+      </p>
+    </motion.a>
+  )
+}
+
 export function Hero({ ready }: { ready: boolean }) {
   const ref = useRef<HTMLElement>(null)
   const reduce = useReducedMotion()
@@ -133,12 +176,9 @@ export function Hero({ ready }: { ready: boolean }) {
         </div>
       </motion.div>
 
-      {/* main split — stacked name + blurb left, full-height portrait right */}
-      <div className="mt-8 grid flex-1 grid-cols-1 gap-x-8 lg:grid-cols-12">
-        <motion.div
-          style={{ y: textY }}
-          className="flex flex-col justify-between lg:col-span-6"
-        >
+      {/* stacked name + blurb — full width; portrait slot returns later */}
+      <div className="mt-8 flex flex-1 flex-col">
+        <motion.div style={{ y: textY }} className="flex flex-1 flex-col justify-between">
           <h1 className="font-display text-[clamp(4.25rem,16vw,15rem)] uppercase leading-[0.88] tracking-[0.01em]">
             {lines.map((line) => (
               <span key={line} className="block whitespace-nowrap">
@@ -155,61 +195,77 @@ export function Hero({ ready }: { ready: boolean }) {
             ))}
           </h1>
 
-          <div className="mt-10 pb-4 lg:pb-14">
-            <motion.p variants={fadeUp(0.75)} className="max-w-[480px] leading-7 text-smoke">
-              {HERO.blurb}
-            </motion.p>
-            <motion.div variants={fadeUp(0.9)} className="mt-10 flex items-center gap-5">
-              <span className="font-grotesk text-[11px] uppercase tracking-[0.3em] text-ash">
-                Scroll
-              </span>
-              <span className="relative inline-block h-px w-16 overflow-hidden bg-line">
-                {!reduce && (
-                  <motion.span
-                    className="absolute inset-y-0 w-6 bg-rust"
-                    animate={{ x: [-24, 64] }}
-                    transition={{
-                      duration: 1.6,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                      repeatDelay: 0.5,
-                      delay: 2,
-                    }}
-                  />
-                )}
-              </span>
-            </motion.div>
-            <div className="mt-8 overflow-hidden sm:hidden">
-              <motion.p
-                variants={maskUp(1)}
-                className="font-grotesk text-[13px] uppercase tracking-[0.2em] text-ash"
-              >
-                {HERO.location}
+          {/* bottom band — blurb + scroll cue left, links + hard numbers right */}
+          <div className="mt-10 flex flex-col justify-between gap-12 pb-4 lg:flex-row lg:items-end lg:pb-14">
+            <div className="max-w-[480px]">
+              <motion.p variants={fadeUp(0.75)} className="leading-7 text-smoke">
+                {HERO.blurb}
               </motion.p>
+              <motion.div variants={fadeUp(0.9)} className="mt-10 flex items-center gap-5">
+                <span className="font-grotesk text-[11px] uppercase tracking-[0.3em] text-ash">
+                  Scroll
+                </span>
+                <span className="relative inline-block h-px w-16 overflow-hidden bg-line">
+                  {!reduce && (
+                    <motion.span
+                      className="absolute inset-y-0 w-6 bg-rust"
+                      animate={{ x: [-24, 64] }}
+                      transition={{
+                        duration: 1.6,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        repeatDelay: 0.5,
+                        delay: 2,
+                      }}
+                    />
+                  )}
+                </span>
+              </motion.div>
+              <div className="mt-8 overflow-hidden sm:hidden">
+                <motion.p
+                  variants={maskUp(1)}
+                  className="font-grotesk text-[13px] uppercase tracking-[0.2em] text-ash"
+                >
+                  {HERO.location}
+                </motion.p>
+              </div>
             </div>
-          </div>
-        </motion.div>
 
-        {/* portrait slot — clean monogram placeholder; real photo drops in later */}
-        <motion.div
-          variants={{
-            hidden: { clipPath: 'inset(100% 0% 0% 0%)' },
-            show: {
-              clipPath: 'inset(0% 0% 0% 0%)',
-              transition: { delay: 0.5, duration: 1.2, ease: EXPO },
-            },
-          }}
-          className="group relative mx-auto mt-8 aspect-[3/4] w-full max-w-[420px] border border-line lg:col-span-6 lg:mx-0 lg:mt-0 lg:aspect-auto lg:h-full lg:max-w-none"
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-display text-6xl uppercase leading-none text-ink/80 transition-colors duration-500 group-hover:text-rust lg:text-7xl">
-              ND<span className="text-rust">.</span>
-            </span>
+            <motion.div variants={fadeUp(0.95)} className="flex flex-col gap-8 lg:items-end">
+              <div className="flex flex-wrap gap-x-7 gap-y-3">
+                {HERO_META.links.map(({ label, href, download }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    {...(download
+                      ? { download: 'Nithik_Deva_Resume.pdf' }
+                      : { target: '_blank', rel: 'noreferrer' })}
+                    data-cursor="link"
+                    className="u-line font-grotesk text-sm uppercase tracking-[0.12em] text-ink"
+                  >
+                    {label} <span className="text-rust">↗</span>
+                  </a>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-x-12 gap-y-6">
+                {HERO_META.stats.map(({ value, label }) => (
+                  <div key={label} className="lg:text-right">
+                    <p className="font-display text-4xl leading-none text-ink lg:text-5xl">
+                      {value}
+                    </p>
+                    <p className="mt-2 font-grotesk text-[11px] uppercase tracking-[0.2em] text-ash">
+                      {label}
+                    </p>
+                  </div>
+                ))}
+                <LeetCodeStat />
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
 
-      {/* baseline rule the portrait stands on */}
+      {/* baseline rule */}
       <motion.div
         variants={{
           hidden: { scaleX: 0 },

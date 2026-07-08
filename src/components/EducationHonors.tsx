@@ -51,18 +51,28 @@ export function EducationHonors() {
             <FadeUp>
               <p className="max-w-[576px] leading-6 text-smoke">{OFF_CLOCK.blurb}</p>
             </FadeUp>
-            <FadeUp delay={0.12}>
-              <div className="mt-8 flex flex-wrap gap-4">
-                {OFF_CLOCK.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="border border-steel px-[13px] py-[5px] font-grotesk text-sm text-ink transition-colors duration-300 hover:border-rust hover:text-rust"
+            {/* photo strip — placeholder frames; drop an <img> into each
+                frame's picture area when the real photos are picked */}
+            <div className="mt-10 flex gap-5 overflow-x-auto pb-4 lg:overflow-visible lg:pb-0">
+              {OFF_CLOCK.tags.map((tag, i) => (
+                <FadeUp key={tag} delay={0.08 + i * 0.07} className="shrink-0">
+                  <div
+                    className={`group w-36 border border-line bg-cream p-2 pb-3 transition-transform duration-500 hover:-translate-y-2 hover:rotate-0 lg:w-40 ${
+                      i % 2 === 0 ? 'rotate-[-2deg]' : 'rotate-[1.75deg]'
+                    }`}
                   >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </FadeUp>
+                    <div className="flex aspect-[3/4] items-center justify-center bg-surface">
+                      <span className="select-none font-display text-4xl text-ink/[0.08] transition-colors duration-500 group-hover:text-rust/30">
+                        0{i + 1}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-center font-grotesk text-[10px] uppercase tracking-[0.2em] text-ash">
+                      {tag}
+                    </p>
+                  </div>
+                </FadeUp>
+              ))}
+            </div>
           </div>
         </div>
       </div>

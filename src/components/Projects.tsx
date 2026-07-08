@@ -55,54 +55,54 @@ function ProjectCard({ project, order }: { project: Project; order: number }) {
       transition={{ duration: 0.9, ease: EXPO, delay: order * 0.12 }}
       className="[perspective:1200px]"
     >
-      <motion.div
-        ref={ref}
-        role="link"
-        tabIndex={0}
-        aria-label={`${project.title} — open live site`}
-        data-cursor="view"
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        onClick={open}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') window.open(project.live, '_blank', 'noopener')
-        }}
-        style={{ rotateX, rotateY }}
-        className="group flex h-full cursor-pointer flex-col justify-between border-2 border-ink bg-cream p-8 transition-colors duration-500 [transform-style:preserve-3d] hover:bg-panel lg:p-[50px]"
-      >
-        <div style={{ transform: 'translateZ(32px)' }}>
-          <div className="flex items-center justify-between">
-            <span className="font-grotesk text-rust">
-              {project.index} / {project.domain}
-            </span>
-            <a
-              href={project.source}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`${project.title} source code on GitHub`}
-              data-cursor="link"
-              className="text-ink transition-all duration-300 hover:-translate-y-1 hover:translate-x-1 group-hover:text-panel-fg"
-            >
-              <ArrowUpRight />
-            </a>
+        <motion.div
+          ref={ref}
+          role="link"
+          tabIndex={0}
+          aria-label={`${project.title} — open live site`}
+          data-cursor="view"
+          onMouseMove={onMove}
+          onMouseLeave={onLeave}
+          onClick={open}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') window.open(project.live, '_blank', 'noopener')
+          }}
+          style={{ rotateX, rotateY }}
+          className="group flex h-full cursor-pointer flex-col justify-between border-2 border-ink bg-cream p-8 transition-colors duration-500 [transform-style:preserve-3d] hover:bg-panel lg:p-[50px]"
+        >
+          <div style={{ transform: 'translateZ(32px)' }}>
+            <div className="flex items-center justify-between">
+              <span className="font-grotesk text-rust">
+                {project.index} / {project.domain}
+              </span>
+              <a
+                href={project.source}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${project.title} source code on GitHub`}
+                data-cursor="link"
+                className="text-ink transition-all duration-300 hover:-translate-y-1 hover:translate-x-1 group-hover:text-panel-fg"
+              >
+                <ArrowUpRight />
+              </a>
+            </div>
+            <h3 className="mt-8 font-display text-[clamp(2.75rem,5vw,4rem)] uppercase leading-none text-ink transition-colors duration-500 group-hover:text-panel-fg">
+              {project.title}
+            </h3>
+            <p className="mt-6 max-w-[448px] leading-6 text-smoke transition-colors duration-500 group-hover:text-panel-fg/70">
+              {project.description}
+            </p>
           </div>
-          <h3 className="mt-8 font-display text-[clamp(2.75rem,5vw,4rem)] uppercase leading-none text-ink transition-colors duration-500 group-hover:text-panel-fg">
-            {project.title}
-          </h3>
-          <p className="mt-6 max-w-[448px] leading-6 text-smoke transition-colors duration-500 group-hover:text-panel-fg/70">
-            {project.description}
-          </p>
-        </div>
-        <div className="mt-10 flex flex-wrap gap-4" style={{ transform: 'translateZ(20px)' }}>
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="border border-steel px-[13px] py-[5px] font-grotesk text-sm text-ink transition-colors duration-500 group-hover:border-panel-fg/40 group-hover:text-panel-fg"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+          <div className="mt-10 flex flex-wrap gap-4" style={{ transform: 'translateZ(20px)' }}>
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="border border-steel px-[13px] py-[5px] font-grotesk text-sm text-ink transition-colors duration-500 group-hover:border-panel-fg/40 group-hover:text-panel-fg"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
       </motion.div>
     </motion.div>
   )

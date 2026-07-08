@@ -6,6 +6,7 @@ import { Grain } from './components/Grain'
 import { Preloader } from './components/Preloader'
 import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
+import { Statement } from './components/Statement'
 import { Experience } from './components/Experience'
 import { Projects } from './components/Projects'
 import { Expertise } from './components/Expertise'
@@ -42,6 +43,7 @@ export default function App() {
       <main>
         <Hero ready={ready} />
         <div className="mt-24 space-y-24 lg:mt-40 lg:space-y-40">
+          <Statement />
           <Experience />
           <Projects />
         </div>

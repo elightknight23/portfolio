@@ -19,7 +19,7 @@ export function SectionLabel({
     <div className={`relative ${className}`}>
       <span
         aria-hidden
-        className="pointer-events-none absolute -left-1 -top-9 select-none font-display text-[5rem] leading-none text-ink/[0.05] lg:text-[6.5rem]"
+        className="pointer-events-none absolute -left-2 -top-12 select-none font-display text-[8rem] leading-none text-ink/[0.05] lg:-top-16 lg:text-[11rem]"
       >
         {index}
       </span>
