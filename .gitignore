@@ -4,3 +4,10 @@ dist
 *.local
 .claude
 src/assets/portrait.png
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
